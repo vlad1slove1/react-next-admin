@@ -9,6 +9,7 @@ export const supabaseApi = createApi({
         const { data, error } = await supabase
           .from('orders')
           .select('*')
+          .order('id', { ascending: true })
 
         if (error != null) {
           throw new Error(error.message)
