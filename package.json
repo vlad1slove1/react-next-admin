@@ -9,11 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.11",
     "@mui/material": "^5.14.11",
-    "@mui/styled-engine-sc": "^5.14.11",
+    "@mui/styled-engine-sc": "^5.14.12",
+    "@mui/x-data-grid": "^6.16.0",
+    "@nextui-org/react": "^2.1.13",
     "@reduxjs/toolkit": "^1.9.6",
     "@supabase/supabase-js": "^2.37.0",
+    "framer-motion": "^10.16.4",
     "next": "13.5.4",
     "react": "^18",
     "react-dom": "^18",
