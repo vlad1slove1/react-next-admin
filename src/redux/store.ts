@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
-import ordersReduces from './slices/ordersSlice'
+import ordersReducer from './slices/ordersSlice'
 import { supabaseApi } from './services/supabaseApi'
 import { setupListeners } from '@reduxjs/toolkit/dist/query'
 
 const store = configureStore({
   reducer: {
-    ordersReduces,
+    ordersReducer,
     [supabaseApi.reducerPath]: supabaseApi.reducer
   },
   middleware: (getDefaultMiddleware) =>
