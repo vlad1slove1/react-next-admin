@@ -91,7 +91,7 @@ export default function AdminPage (): React.JSX.Element {
         }}
       >
         <DataGrid
-          rows={data}
+          rows={data ?? []}
           columns={columns}
           rowModesModel={rowModesModel}
           // slots={{
