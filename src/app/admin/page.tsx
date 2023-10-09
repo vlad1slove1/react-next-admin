@@ -29,11 +29,11 @@ export default function AdminPage (): React.JSX.Element {
   }
 
   const handleEditClick = (id: GridRowId) => () => {
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } })
+    // setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } })
   }
 
   const handleDeleteClick = (id: GridRowId) => () => {
-    setRows(rows.filter((row) => row.id !== id))
+    // setRows(rows.filter((row) => row.id !== id))
   }
 
   const columns: GridColDef[] = [
