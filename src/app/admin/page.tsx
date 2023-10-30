@@ -1,8 +1,8 @@
 'use client'
 
-import React, { useState } from 'react'
+import React from 'react'
 import { useGetOrdersQuery } from '@/redux/services/supabaseApi'
-import { useAppDispatch, useAppSelector } from '@/redux/hooks'
+import { useAppSelector } from '@/redux/hooks'
 
 import NewOrderButton from '@/components/NewOrderButton'
 import Spinner from '@/components/Spinner'
@@ -12,20 +12,17 @@ import DeleteIcon from '@mui/icons-material/DeleteOutlined'
 import { DataGrid } from '@mui/x-data-grid/DataGrid'
 import {
   type GridColDef,
-  type GridRowModesModel,
   type GridRowId,
-  GridActionsCellItem,
-  GridRowModes
+  GridActionsCellItem
 } from '@mui/x-data-grid'
 
 export default function AdminPage (): React.JSX.Element {
-  const { data, error, isLoading } = useGetOrdersQuery(null)
-  const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({})
+  const { isLoading } = useGetOrdersQuery(null)
+  const orders = useAppSelector((state) => state.ordersReducer.orders)
+  // const dispatch = useAppDispatch()
 
   if (isLoading) {
-    return (
-      <Spinner />
-    )
+    return <Spinner />
   }
 
   const handleEditClick = (id: GridRowId) => () => {
@@ -39,7 +36,7 @@ export default function AdminPage (): React.JSX.Element {
   const columns: GridColDef[] = [
     { field: 'createdAt', headerName: 'Date', headerAlign: 'center', align: 'center', flex: 1, headerClassName: 'super-app-theme--header' },
     { field: 'author', headerName: 'Author', headerAlign: 'center', align: 'center', flex: 2, headerClassName: 'super-app-theme--header' },
-    { field: 'price', headerName: 'Price', headerAlign: 'center', align: 'center', flex: 1, headerClassName: 'super-app-theme--header' },
+    { field: 'price', headerName: 'Price $', headerAlign: 'center', align: 'center', flex: 1, headerClassName: 'super-app-theme--header' },
     { field: 'company', headerName: 'Company', headerAlign: 'center', align: 'center', flex: 2, headerClassName: 'super-app-theme--header' },
     { field: 'address', headerName: 'Address', headerAlign: 'center', flex: 3, headerClassName: 'super-app-theme--header' },
     { field: 'contact', headerName: 'Contact', headerAlign: 'center', align: 'center', flex: 2, headerClassName: 'super-app-theme--header' },
@@ -91,12 +88,8 @@ export default function AdminPage (): React.JSX.Element {
         }}
       >
         <DataGrid
-          rows={data ?? []}
+          rows={orders ?? []}
           columns={columns}
-          rowModesModel={rowModesModel}
-          // slots={{
-          //   toolbar: NewOrderButton
-          // }}
           initialState={{
             pagination: {
               paginationModel: { page: 0, pageSize: 15 }
