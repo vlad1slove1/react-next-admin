@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-
 import React from 'react'
 import { useForm, Controller, type SubmitHandler } from 'react-hook-form'
 import {
@@ -16,7 +15,7 @@ import DatePicker from 'react-datepicker'
 import MailIcon from '../icons/MailIcon'
 import { useAppDispatch } from '@/redux/hooks'
 import { useGetOrdersQuery, useCreateOrderMutation } from '@/redux/services/supabaseApi'
-import { setOrders } from '@/redux/slices/ordersSlice'
+import { setOrder } from '@/redux/slices/ordersSlice'
 
 import 'react-datepicker/dist/react-datepicker.css'
 
@@ -27,7 +26,7 @@ interface INewOrderModalProps {
   onOpenChange: OnOpenChange
 }
 
-interface IInputs {
+interface IOrder {
   about: string | null
   address: string | null
   author: string | null
@@ -49,12 +48,11 @@ export default function NewOrderModal ({ isOpen, onOpenChange }: INewOrderModalP
     handleSubmit,
     control,
     reset
-  } = useForm<IInputs>()
-  const onSubmit: SubmitHandler<IInputs> = async (data) => {
+  } = useForm<IOrder>()
+  const onSubmit: SubmitHandler<IOrder> = async (data) => {
     try {
-      // Create new order
       const responseData = await createOrder(data).unwrap()
-      dispatch(setOrders(responseData[0]))
+      dispatch(setOrder(responseData))
 
       reset()
       onOpenChange(false)
