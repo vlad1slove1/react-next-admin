@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 'use client'
 
 import React from 'react'
-import { useGetOrdersQuery } from '@/redux/services/supabaseApi'
-import { useAppSelector } from '@/redux/hooks'
+import { useGetOrdersQuery, useDeleteOrderMutation } from '@/redux/services/supabaseApi'
+import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 
 import NewOrderButton from '@/components/NewOrderButton'
 import Spinner from '@/components/Spinner'
@@ -15,11 +16,13 @@ import {
   type GridRowId,
   GridActionsCellItem
 } from '@mui/x-data-grid'
+import { deleteOrder } from '@/redux/slices/ordersSlice'
 
 export default function AdminPage (): React.JSX.Element {
-  const { isLoading } = useGetOrdersQuery(null)
+  const { isLoading, refetch } = useGetOrdersQuery(null)
+  const [removeOrder] = useDeleteOrderMutation()
   const orders = useAppSelector((state) => state.ordersReducer.orders)
-  // const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch()
 
   if (isLoading) {
     return <Spinner />
@@ -29,8 +32,16 @@ export default function AdminPage (): React.JSX.Element {
     // setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } })
   }
 
-  const handleDeleteClick = (id: GridRowId) => () => {
-    // setRows(rows.filter((row) => row.id !== id))
+  const handleDeleteClick = (id: GridRowId) => async () => {
+    try {
+      const responseData = await removeOrder(id).unwrap()
+      dispatch(deleteOrder(Number(id)))
+      void refetch()
+
+      return responseData
+    } catch (error) {
+      console.error('Error creating order:', error)
+    }
   }
 
   const columns: GridColDef[] = [
