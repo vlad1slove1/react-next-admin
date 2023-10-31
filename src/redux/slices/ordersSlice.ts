@@ -10,28 +10,33 @@ interface IOrder {
   createdAt: string | null
   email: string | null
   price: string | null
+  id?: number | null
 }
 
 interface IOrdersState {
   loadingStatus: 'idle' | 'loading' | 'succeeded' | 'failed'
   error: string | null
   orders: IOrder[] | any[]
-  currentOrderId: number | null
 }
 
 const initialState: IOrdersState = {
   loadingStatus: 'loading',
   error: null,
-  orders: [],
-  currentOrderId: null
+  orders: []
 }
 
 const ordersSlice = createSlice({
   name: 'ordersInfo',
   initialState,
   reducers: {
-    setOrders: (state, { payload }: PayloadAction<IOrder>) => {
+    setOrder: (state, { payload }: PayloadAction<IOrder>) => {
       state.orders.push(payload)
+      state.loadingStatus = 'succeeded'
+      state.error = null
+    },
+    deleteOrder: (state, { payload }: PayloadAction<number>) => {
+      const filteredOrders = state.orders.filter((order) => order.id !== payload)
+      state.orders = filteredOrders
       state.loadingStatus = 'succeeded'
       state.error = null
     }
@@ -52,6 +57,6 @@ const ordersSlice = createSlice({
   }
 })
 
-export const { setOrders } = ordersSlice.actions
+export const { setOrder, deleteOrder } = ordersSlice.actions
 export const ordersSelector = (state: any): void => state.orders
 export default ordersSlice.reducer
