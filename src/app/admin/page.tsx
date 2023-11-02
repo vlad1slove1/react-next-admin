@@ -1,11 +1,17 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 'use client'
 
-import React from 'react'
-import { useGetOrdersQuery, useDeleteOrderMutation } from '@/redux/services/supabaseApi'
+import React, { type SetStateAction, useState } from 'react'
+import {
+  useGetOrdersQuery,
+  useDeleteOrderMutation
+} from '@/redux/services/supabaseApi'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
+import { deleteOrder } from '@/redux/slices/ordersSlice'
+import { useDisclosure } from '@nextui-org/react'
 
 import NewOrderButton from '@/components/NewOrderButton'
+import EditOrderModal from '@/components/modals/EditOrderModal'
 import Spinner from '@/components/Spinner'
 import Box from '@mui/material/Box'
 import EditIcon from '@mui/icons-material/Edit'
@@ -16,9 +22,10 @@ import {
   type GridRowId,
   GridActionsCellItem
 } from '@mui/x-data-grid'
-import { deleteOrder } from '@/redux/slices/ordersSlice'
 
 export default function AdminPage (): React.JSX.Element {
+  const [selectedOrderData, setSelectedOrderData] = useState(null)
+  const { isOpen, onOpenChange } = useDisclosure()
   const { isLoading, refetch } = useGetOrdersQuery(null)
   const [removeOrder] = useDeleteOrderMutation()
   const orders = useAppSelector((state) => state.ordersReducer.orders)
@@ -28,8 +35,9 @@ export default function AdminPage (): React.JSX.Element {
     return <Spinner />
   }
 
-  const handleEditClick = (id: GridRowId) => () => {
-    // setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } })
+  const handleEditClick = (data: SetStateAction<any>) => async () => {
+    onOpenChange()
+    setSelectedOrderData(data)
   }
 
   const handleDeleteClick = (id: GridRowId) => async () => {
@@ -60,21 +68,21 @@ export default function AdminPage (): React.JSX.Element {
       flex: 1,
       cellClassName: 'actions',
       headerClassName: 'super-app-theme--header',
-      getActions: ({ id }) => {
+      getActions: (data) => {
         return [
           <GridActionsCellItem
-            key={id}
+            key={data.id}
             icon={<EditIcon />}
             label="Edit"
             className="textPrimary"
-            onClick={handleEditClick(id)}
+            onClick={handleEditClick(data)}
             color="inherit"
           />,
           <GridActionsCellItem
-            key={id}
+            key={data.id}
             icon={<DeleteIcon />}
             label="Delete"
-            onClick={handleDeleteClick(id)}
+            onClick={handleDeleteClick(data.id)}
             color="inherit"
           />
         ]
@@ -109,6 +117,8 @@ export default function AdminPage (): React.JSX.Element {
           pageSizeOptions={[15, 30, 45]}
         />
       </Box>
+
+      <EditOrderModal isOpen={isOpen} onOpenChange={onOpenChange} orderData={selectedOrderData} />
     </Box>
   )
 }
