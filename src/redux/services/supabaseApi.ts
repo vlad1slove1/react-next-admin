@@ -58,8 +58,28 @@ export const supabaseApi = createApi({
 
         return { data }
       }
+    }),
+    updateOrder: builder.mutation({
+      queryFn: async (newData) => {
+        const { data, error } = await supabase
+          .from('orders')
+          .update(newData)
+          .eq('id', newData.id)
+          .select('*')
+
+        if (error != null) {
+          throw new Error(error.message)
+        }
+
+        return { data: data[0] }
+      }
     })
   })
 })
 
-export const { useGetOrdersQuery, useCreateOrderMutation, useDeleteOrderMutation } = supabaseApi
+export const {
+  useGetOrdersQuery,
+  useCreateOrderMutation,
+  useDeleteOrderMutation,
+  useUpdateOrderMutation
+} = supabaseApi
