@@ -39,6 +39,23 @@ const ordersSlice = createSlice({
       state.orders = filteredOrders
       state.loadingStatus = 'succeeded'
       state.error = null
+    },
+    updateOrder: (state, { payload }: PayloadAction<IOrder>) => {
+      const currOrderIndex = state.orders.map((order) => order.id).indexOf(payload.id)
+      const updatedOrder = {
+        about: payload.about,
+        address: payload.address,
+        author: payload.author,
+        company: payload.company,
+        contact: payload.contact,
+        createdAt: payload.createdAt,
+        email: payload.email,
+        price: payload.price,
+        id: payload.id
+      }
+      state.orders[currOrderIndex] = updatedOrder
+      state.loadingStatus = 'succeeded'
+      state.error = null
     }
   },
   extraReducers: (builder) => {
@@ -57,6 +74,6 @@ const ordersSlice = createSlice({
   }
 })
 
-export const { setOrder, deleteOrder } = ordersSlice.actions
+export const { setOrder, deleteOrder, updateOrder } = ordersSlice.actions
 export const ordersSelector = (state: any): void => state.orders
 export default ordersSlice.reducer
