@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import React, { useState, type SyntheticEvent } from 'react'
 import { useForm, Controller, type SubmitHandler } from 'react-hook-form'
@@ -47,11 +46,11 @@ export default function NewOrderModal ({ isOpen, onOpenChange }: INewOrderModalP
   const [createOrder] = useCreateOrderMutation()
   const dispatch = useAppDispatch()
 
-  const handleOpenAlert = () => {
+  const handleOpenAlert = (): void => {
     setAlertOpen(true)
   }
 
-  const handleCloseAlert = (event: Event | SyntheticEvent<Element, Event>, reason?: string) => {
+  const handleCloseAlert = (event?: Event | SyntheticEvent<Element, Event>, reason?: string): void => {
     if (reason === 'clickaway') {
       return
     }
@@ -69,13 +68,12 @@ export default function NewOrderModal ({ isOpen, onOpenChange }: INewOrderModalP
     try {
       const responseData = await createOrder(data).unwrap()
       dispatch(setOrder(responseData))
-
-      reset()
-      onOpenChange()
       void refetch()
     } catch (error) {
       console.error('Error creating order:', error)
     } finally {
+      reset()
+      onOpenChange()
       handleOpenAlert()
     }
   }
