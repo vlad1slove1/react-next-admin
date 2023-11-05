@@ -1,9 +1,12 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-import React, { forwardRef, type SyntheticEvent } from 'react'
+import React, { forwardRef } from 'react'
 
-import Snackbar, { type SnackbarProps } from '@mui/material/Snackbar'
-import MuiAlert, { type AlertProps } from '@mui/material/Alert'
+import Snackbar from '@mui/material/Snackbar'
+import MuiAlert from '@mui/material/Alert'
 import Slide from '@mui/material/Slide'
+
+import type { SyntheticEvent } from 'react'
+import type { SnackbarProps } from '@mui/material/Snackbar'
+import type { AlertProps } from '@mui/material/Alert'
 
 interface IAlertMessageProps extends AlertProps {
   onClose: (event: Event | SyntheticEvent<Element, Event>, reason?: string) => void
