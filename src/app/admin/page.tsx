@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
 'use client'
 
-import React, { useState, type SetStateAction, type SyntheticEvent } from 'react'
+import React, { useState } from 'react'
 import {
   useGetOrdersQuery,
   useDeleteOrderMutation
@@ -18,11 +17,10 @@ import Box from '@mui/material/Box'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/DeleteOutlined'
 import { DataGrid } from '@mui/x-data-grid/DataGrid'
-import {
-  type GridColDef,
-  type GridRowId,
-  GridActionsCellItem
-} from '@mui/x-data-grid'
+import { GridActionsCellItem } from '@mui/x-data-grid'
+
+import type { SetStateAction, SyntheticEvent } from 'react'
+import type { GridColDef, GridRowId } from '@mui/x-data-grid'
 
 export default function AdminPage (): React.JSX.Element {
   const [selectedOrderData, setSelectedOrderData] = useState(null)
@@ -46,7 +44,7 @@ export default function AdminPage (): React.JSX.Element {
     setAlertOpen(true)
   }
 
-  const handleCloseAlert = (event?: Event | SyntheticEvent<Element, Event>, reason?: string): void => {
+  const handleCloseAlert = (_event?: Event | SyntheticEvent<Element, Event>, reason?: string): void => {
     if (reason === 'clickaway') {
       return
     }
