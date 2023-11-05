@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
-import React, { useState, type SyntheticEvent } from 'react'
-import { useForm, Controller, type SubmitHandler } from 'react-hook-form'
+import React, { useState } from 'react'
+import { useForm, Controller } from 'react-hook-form'
 import { useAppDispatch } from '@/redux/hooks'
 import { useGetOrdersQuery, useCreateOrderMutation } from '@/redux/services/supabaseApi'
 import { setOrder } from '@/redux/slices/ordersSlice'
+import { yupResolver } from '@hookform/resolvers/yup'
 
 import {
   Modal,
@@ -17,27 +17,19 @@ import {
 } from '@nextui-org/react'
 import DatePicker from 'react-datepicker'
 import MailIcon from '../icons/MailIcon'
+import CalendarIcon from '@/components/icons/CalendarIcon'
 import SnackbarWithAlert from '../SnackbarWithAlert'
+import { schema } from '@/schemas/orderSchema'
+
+import type { SyntheticEvent } from 'react'
+import type { SubmitHandler } from 'react-hook-form'
+import type { FormData } from '@/schemas/orderSchema'
 
 import 'react-datepicker/dist/react-datepicker.css'
 
-type OnOpenChange = () => void
-
 interface INewOrderModalProps {
   isOpen: boolean
-  onOpenChange: OnOpenChange
-}
-
-interface IOrder {
-  about: string | null
-  address: string | null
-  author: string | null
-  company: string | null
-  contact: string | null
-  createdAt: Date | null
-  email: string | null
-  price: number | null
-  id: number | null
+  onOpenChange: () => void
 }
 
 export default function NewOrderModal ({ isOpen, onOpenChange }: INewOrderModalProps): React.JSX.Element {
@@ -50,7 +42,7 @@ export default function NewOrderModal ({ isOpen, onOpenChange }: INewOrderModalP
     setAlertOpen(true)
   }
 
-  const handleCloseAlert = (event?: Event | SyntheticEvent<Element, Event>, reason?: string): void => {
+  const handleCloseAlert = (_event?: Event | SyntheticEvent<Element, Event>, reason?: string): void => {
     if (reason === 'clickaway') {
       return
     }
@@ -62,9 +54,10 @@ export default function NewOrderModal ({ isOpen, onOpenChange }: INewOrderModalP
     register,
     handleSubmit,
     control,
-    reset
-  } = useForm<IOrder>()
-  const onSubmit: SubmitHandler<IOrder> = async (data) => {
+    reset,
+    formState: { errors }
+  } = useForm<FormData>({ resolver: yupResolver(schema) })
+  const onSubmit: SubmitHandler<FormData> = async (data: FormData): Promise<void> => {
     try {
       const responseData = await createOrder(data).unwrap()
       dispatch(setOrder(responseData))
@@ -98,69 +91,73 @@ export default function NewOrderModal ({ isOpen, onOpenChange }: INewOrderModalP
                     control={control}
                     defaultValue={new Date()}
                     render={({ field }) => (
+                      <>
                         <DatePicker
-                          showIcon
                           selected={field.value}
-                          onChange={(date) => { field.onChange(date) }}
+                          onChange={(date: Date | null): void => { field.onChange(date) }}
                           dateFormat="dd.MM.yyyy"
-                          icon={
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="1em"
-                              height="1em"
-                              viewBox="0 0 48 48"
-                              className="text-2xl text-default-400 pointer-events-none flex-shrink-0"
-                            >
-                              <mask id="ipSApplication0">
-                                <g fill="none" stroke="#fff" strokeLinejoin="round" strokeWidth="4">
-                                  <path strokeLinecap="round" d="M40.04 22v20h-32V22"></path>
-                                  <path
-                                    fill="#fff"
-                                    d="M5.842 13.777C4.312 17.737 7.263 22 11.51 22c3.314 0 6.019-2.686 6.019-6a6 6 0 0 0 6 6h1.018a6 6 0 0 0 6-6c0 3.314 2.706 6 6.02 6c4.248 0 7.201-4.265 5.67-8.228L39.234 6H8.845l-3.003 7.777Z"
-                                  ></path>
-                                </g>
-                              </mask>
-                              <path
-                                fill="currentColor"
-                                d="M0 0h48v48H0z"
-                                mask="url(#ipSApplication0)"
-                              ></path>
-                            </svg>
-                          }
+                          popperClassName="some-custom-class"
+                          popperPlacement="top-end"
+                          popperModifiers={[
+                            {
+                              name: 'offset',
+                              options: {
+                                offset: [5, 10]
+                              }
+                            },
+                            {
+                              name: 'preventOverflow',
+                              options: {
+                                rootBoundary: 'viewport',
+                                tether: false,
+                                altAxis: true
+                              }
+                            }
+                          ]}
                           customInput={
                             <Input
-                              isRequired
                               label="Date"
                               placeholder="Date"
                               variant="bordered"
                               radius="none"
                               labelPlacement="outside"
+                              isInvalid={!!errors.createdAt}
+                              color={errors.createdAt ? 'danger' : 'success'}
+                              errorMessage={errors.createdAt?.message}
+                              startContent={
+                                <CalendarIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+                              }
                             />
                           }
                         />
+                      </>
                     )}
                   />
                   <Input
                     autoFocus
                     isClearable
-                    isRequired
                     label="Author"
                     placeholder="Bill Murray"
                     variant="bordered"
                     radius="none"
                     labelPlacement="outside"
+                    isInvalid={!!errors.author}
+                    color={errors.author ? 'danger' : 'success'}
+                    errorMessage={errors.author?.message}
                     {...register('author')}
                   />
 
                   <Input
                     isClearable
-                    isRequired
                     label="Price"
                     type="number"
                     placeholder="0"
                     variant="bordered"
                     radius="none"
                     labelPlacement="outside"
+                    isInvalid={!!errors.price}
+                    color={errors.price ? 'danger' : 'success'}
+                    errorMessage={errors.price?.message}
                     startContent={
                       <div className="pointer-events-none flex items-center">
                         <span className="text-default-400 text-small">$</span>
@@ -171,49 +168,57 @@ export default function NewOrderModal ({ isOpen, onOpenChange }: INewOrderModalP
 
                   <Input
                     isClearable
-                    isRequired
                     label="Company"
                     placeholder="Yandex Inc."
                     type="text"
                     variant="bordered"
                     radius="none"
                     labelPlacement="outside"
+                    isInvalid={!!errors.company}
+                    color={errors.company ? 'danger' : 'success'}
+                    errorMessage={errors.company?.message}
                     {...register('company')}
                   />
 
                   <Input
                     isClearable
-                    isRequired
                     label="Address"
                     placeholder="Moscow, Gagarina str. 46"
                     type="text"
                     variant="bordered"
                     radius="none"
                     labelPlacement="outside"
+                    isInvalid={!!errors.address}
+                    color={errors.address ? 'danger' : 'success'}
+                    errorMessage={errors.address?.message}
                     {...register('address')}
                   />
 
                   <Input
                     isClearable
-                    isRequired
                     label="Contact"
                     placeholder="Jean Paul Belmondo"
                     type="text"
                     variant="bordered"
                     radius="none"
                     labelPlacement="outside"
+                    isInvalid={!!errors.contact}
+                    color={errors.contact ? 'danger' : 'success'}
+                    errorMessage={errors.contact?.message}
                     {...register('contact')}
                   />
 
                   <Input
                     isClearable
-                    isRequired
                     type="email"
                     label="Email"
                     placeholder="you@example.com"
                     variant="bordered"
                     radius="none"
                     labelPlacement="outside"
+                    isInvalid={!!errors.email}
+                    color={errors.email ? 'danger' : 'success'}
+                    errorMessage={errors.email?.message}
                     startContent={
                       <MailIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
                     }
@@ -221,15 +226,17 @@ export default function NewOrderModal ({ isOpen, onOpenChange }: INewOrderModalP
                   />
 
                   <Textarea
-                    isRequired
                     type="text"
                     label="About"
                     placeholder="Lorem ipsum dolor sit amet..."
                     variant="bordered"
                     radius="none"
                     labelPlacement="outside"
+                    isInvalid={!!errors.about}
+                    color={errors.about ? 'danger' : 'success'}
                     {...register('about')}
                   />
+                  <p className="text-tiny text-danger">{errors.about?.message}</p>
                 </form>
               </ModalBody>
               <ModalFooter>
