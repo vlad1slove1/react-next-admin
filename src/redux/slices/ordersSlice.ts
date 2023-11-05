@@ -1,5 +1,7 @@
-import { type PayloadAction, createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 import { supabaseApi } from '../services/supabaseApi'
+
+import type { PayloadAction } from '@reduxjs/toolkit'
 
 interface IOrder {
   about: string | null
@@ -35,14 +37,13 @@ const ordersSlice = createSlice({
       state.error = null
     },
     deleteOrder: (state, { payload }: PayloadAction<number>) => {
-      const filteredOrders = state.orders.filter((order) => order.id !== payload)
-      state.orders = filteredOrders
+      state.orders = state.orders.filter((order) => order.id !== payload)
       state.loadingStatus = 'succeeded'
       state.error = null
     },
     updateOrder: (state, { payload }: PayloadAction<IOrder>) => {
       const currOrderIndex = state.orders.map((order) => order.id).indexOf(payload.id)
-      const updatedOrder = {
+      state.orders[currOrderIndex] = {
         about: payload.about,
         address: payload.address,
         author: payload.author,
@@ -53,7 +54,6 @@ const ordersSlice = createSlice({
         price: payload.price,
         id: payload.id
       }
-      state.orders[currOrderIndex] = updatedOrder
       state.loadingStatus = 'succeeded'
       state.error = null
     }
@@ -75,5 +75,4 @@ const ordersSlice = createSlice({
 })
 
 export const { setOrder, deleteOrder, updateOrder } = ordersSlice.actions
-export const ordersSelector = (state: any): void => state.orders
 export default ordersSlice.reducer
