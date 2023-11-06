@@ -42,7 +42,9 @@ const ordersSlice = createSlice({
       state.error = null
     },
     updateOrder: (state, { payload }: PayloadAction<IOrder>) => {
-      const currOrderIndex = state.orders.map((order) => order.id).indexOf(payload.id)
+      const currOrderIndex = state.orders
+        .map((order) => order.id)
+        .indexOf(payload.id)
       state.orders[currOrderIndex] = {
         about: payload.about,
         address: payload.address,
@@ -59,18 +61,27 @@ const ordersSlice = createSlice({
     }
   },
   extraReducers: (builder) => {
-    builder.addMatcher(supabaseApi.endpoints.getOrders.matchPending, (state) => {
-      state.loadingStatus = 'loading'
-    })
-    builder.addMatcher(supabaseApi.endpoints.getOrders.matchFulfilled, (state, { payload }) => {
-      state.orders = payload
-      state.loadingStatus = 'succeeded'
-      state.error = null
-    })
-    builder.addMatcher(supabaseApi.endpoints.getOrders.matchRejected, (state, { error }) => {
-      state.loadingStatus = 'failed'
-      state.error = error.message ?? null
-    })
+    builder.addMatcher(
+      supabaseApi.endpoints.getOrders.matchPending,
+      (state) => {
+        state.loadingStatus = 'loading'
+      }
+    )
+    builder.addMatcher(
+      supabaseApi.endpoints.getOrders.matchFulfilled,
+      (state, { payload }) => {
+        state.orders = payload
+        state.loadingStatus = 'succeeded'
+        state.error = null
+      }
+    )
+    builder.addMatcher(
+      supabaseApi.endpoints.getOrders.matchRejected,
+      (state, { error }) => {
+        state.loadingStatus = 'failed'
+        state.error = error.message ?? null
+      }
+    )
   }
 })
 
