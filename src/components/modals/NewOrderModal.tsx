@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { useAppDispatch } from '@/redux/hooks'
-import { useGetOrdersQuery, useCreateOrderMutation } from '@/redux/services/supabaseApi'
+import {
+  useGetOrdersQuery,
+  useCreateOrderMutation
+} from '@/redux/services/supabaseApi'
 import { setOrder } from '@/redux/slices/ordersSlice'
 import { yupResolver } from '@hookform/resolvers/yup'
 
@@ -32,7 +35,10 @@ interface INewOrderModalProps {
   onOpenChange: () => void
 }
 
-export default function NewOrderModal ({ isOpen, onOpenChange }: INewOrderModalProps): React.JSX.Element {
+export default function NewOrderModal ({
+  isOpen,
+  onOpenChange
+}: INewOrderModalProps): React.JSX.Element {
   const [alertOpen, setAlertOpen] = useState(false)
   const { refetch } = useGetOrdersQuery(null)
   const [createOrder] = useCreateOrderMutation()
@@ -42,7 +48,10 @@ export default function NewOrderModal ({ isOpen, onOpenChange }: INewOrderModalP
     setAlertOpen(true)
   }
 
-  const handleCloseAlert = (_event?: Event | SyntheticEvent<Element, Event>, reason?: string): void => {
+  const handleCloseAlert = (
+    _event?: Event | SyntheticEvent<Element, Event>,
+    reason?: string
+  ): void => {
     if (reason === 'clickaway') {
       return
     }
@@ -57,7 +66,9 @@ export default function NewOrderModal ({ isOpen, onOpenChange }: INewOrderModalP
     reset,
     formState: { errors }
   } = useForm<FormData>({ resolver: yupResolver(schema) })
-  const onSubmit: SubmitHandler<FormData> = async (data: FormData): Promise<void> => {
+  const onSubmit: SubmitHandler<FormData> = async (
+    data: FormData
+  ): Promise<void> => {
     try {
       const responseData = await createOrder(data).unwrap()
       dispatch(setOrder(responseData))
@@ -83,7 +94,9 @@ export default function NewOrderModal ({ isOpen, onOpenChange }: INewOrderModalP
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1 font-black mb-4">Create order</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1 font-black mb-4">
+                Create order
+              </ModalHeader>
               <ModalBody>
                 <form className="flex flex-col gap-2">
                   <Controller
@@ -94,7 +107,9 @@ export default function NewOrderModal ({ isOpen, onOpenChange }: INewOrderModalP
                       <>
                         <DatePicker
                           selected={field.value}
-                          onChange={(date: Date | null): void => { field.onChange(date) }}
+                          onChange={(date: Date | null): void => {
+                            field.onChange(date)
+                          }}
                           dateFormat="dd.MM.yyyy"
                           popperClassName="some-custom-class"
                           popperPlacement="top-end"
@@ -236,7 +251,9 @@ export default function NewOrderModal ({ isOpen, onOpenChange }: INewOrderModalP
                     color={errors.about ? 'danger' : 'success'}
                     {...register('about')}
                   />
-                  <p className="text-tiny text-danger">{errors.about?.message}</p>
+                  <p className="text-tiny text-danger">
+                    {errors.about?.message}
+                  </p>
                 </form>
               </ModalBody>
               <ModalFooter>
