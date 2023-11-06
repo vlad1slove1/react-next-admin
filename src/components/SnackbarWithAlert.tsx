@@ -9,13 +9,19 @@ import type { SnackbarProps } from '@mui/material/Snackbar'
 import type { AlertProps } from '@mui/material/Alert'
 
 interface IAlertMessageProps extends AlertProps {
-  onClose: (event: Event | SyntheticEvent<Element, Event>, reason?: string) => void
+  onClose: (
+    event: Event | SyntheticEvent<Element, Event>,
+    reason?: string,
+  ) => void
 }
 
 interface ISnackbarWithAlertProps extends Omit<SnackbarProps, 'onClose'> {
   variant: 'success' | 'info' | 'warning' | 'error'
   message: string
-  onClose: (event: Event | SyntheticEvent<Element, Event>, reason?: string) => void
+  onClose: (
+    event: Event | SyntheticEvent<Element, Event>,
+    reason?: string,
+  ) => void
   autoHideDuration?: number
 }
 
@@ -32,7 +38,10 @@ export default function SnackbarWithAlert ({
   message,
   autoHideDuration = 6000
 }: ISnackbarWithAlertProps): React.JSX.Element {
-  const handleClose = (event: Event | SyntheticEvent<Element, Event>, reason?: string) => {
+  const handleClose = (
+    event: Event | SyntheticEvent<Element, Event>,
+    reason?: string
+  ) => {
     if (reason === 'clickaway') {
       return
     }
