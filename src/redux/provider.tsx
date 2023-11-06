@@ -5,12 +5,14 @@ import store from './store'
 import { Provider } from 'react-redux'
 import { NextUIProvider } from '@nextui-org/react'
 
-export default async function Providers ({ children }: { children: React.ReactNode }) {
+export default async function Providers ({
+  children
+}: {
+  children: React.ReactNode
+}) {
   return (
     <NextUIProvider>
-      <Provider store={store}>
-          {children}
-      </Provider>
+      <Provider store={store}>{children}</Provider>
     </NextUIProvider>
   )
 }
