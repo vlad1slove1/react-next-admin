@@ -11,7 +11,10 @@ interface IAuthProviderProps {
   children: ReactNode
 }
 
-export default function AuthProvider ({ accessToken, children }: IAuthProviderProps): React.JSX.Element {
+export default function AuthProvider ({
+  accessToken,
+  children
+}: IAuthProviderProps): React.JSX.Element {
   const supabase = createClientComponentClient()
   const router = useRouter()
 
