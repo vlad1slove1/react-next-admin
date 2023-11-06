@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { useAppDispatch } from '@/redux/hooks'
-import { useGetOrdersQuery, useUpdateOrderMutation } from '@/redux/services/supabaseApi'
+import {
+  useGetOrdersQuery,
+  useUpdateOrderMutation
+} from '@/redux/services/supabaseApi'
 import { updateOrder } from '@/redux/slices/ordersSlice'
 import { yupResolver } from '@hookform/resolvers/yup'
 
@@ -33,7 +36,11 @@ interface IEditOrderModalProps {
   orderData: any
 }
 
-export default function EditOrderModal ({ isOpen, onOpenChange, orderData }: IEditOrderModalProps): React.JSX.Element {
+export default function EditOrderModal ({
+  isOpen,
+  onOpenChange,
+  orderData
+}: IEditOrderModalProps): React.JSX.Element {
   const [alertOpen, setAlertOpen] = useState(false)
   const { refetch } = useGetOrdersQuery(null)
   const [changeOrder] = useUpdateOrderMutation()
@@ -43,7 +50,10 @@ export default function EditOrderModal ({ isOpen, onOpenChange, orderData }: IEd
     setAlertOpen(true)
   }
 
-  const handleCloseAlert = (_event?: Event | SyntheticEvent<Element, Event>, reason?: string): void => {
+  const handleCloseAlert = (
+    _event?: Event | SyntheticEvent<Element, Event>,
+    reason?: string
+  ): void => {
     if (reason === 'clickaway') {
       return
     }
@@ -58,13 +68,15 @@ export default function EditOrderModal ({ isOpen, onOpenChange, orderData }: IEd
     setValue,
     formState: { errors }
   } = useForm<FormData>({ resolver: yupResolver(schema) })
-  const onSubmit: SubmitHandler<FormData> = async (newData: FormData): Promise<void> => {
+  const onSubmit: SubmitHandler<FormData> = async (
+    newData: FormData
+  ): Promise<void> => {
     try {
       const responseData = await changeOrder(newData).unwrap()
       dispatch(updateOrder(responseData))
       void refetch()
     } catch (error) {
-      console.error('Error creating order:', error)
+      console.error('Error editing order:', error)
     } finally {
       onOpenChange()
       handleOpenAlert()
@@ -101,7 +113,9 @@ export default function EditOrderModal ({ isOpen, onOpenChange, orderData }: IEd
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1 font-black mb-4">Update order</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1 font-black mb-4">
+                Update order
+              </ModalHeader>
               <ModalBody>
                 <form className="flex flex-col gap-2">
                   <Controller
@@ -112,7 +126,9 @@ export default function EditOrderModal ({ isOpen, onOpenChange, orderData }: IEd
                       <>
                         <DatePicker
                           selected={field.value}
-                          onChange={(date: Date | null): void => { field.onChange(date) }}
+                          onChange={(date: Date | null): void => {
+                            field.onChange(date)
+                          }}
                           dateFormat="dd.MM.yyyy"
                           popperClassName="some-custom-class"
                           popperPlacement="top-end"
@@ -254,7 +270,9 @@ export default function EditOrderModal ({ isOpen, onOpenChange, orderData }: IEd
                     color={errors.about ? 'danger' : 'success'}
                     {...register('about')}
                   />
-                  <p className="text-tiny text-danger">{errors.about?.message}</p>
+                  <p className="text-tiny text-danger">
+                    {errors.about?.message}
+                  </p>
                 </form>
               </ModalBody>
               <ModalFooter>
