@@ -11,7 +11,11 @@ export default function Spinner (): React.JSX.Element {
         height: '100vh'
       }}
     >
-      <CircularProgress size="lg" aria-label="load spinner" label="Loading data..." />
+      <CircularProgress
+        size="lg"
+        aria-label="load spinner"
+        label="Loading data..."
+      />
     </div>
   )
-};
+}
