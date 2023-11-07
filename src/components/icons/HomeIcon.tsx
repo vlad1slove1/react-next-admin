@@ -10,6 +10,7 @@ export default function HomeIcon ({ ...props }): React.JSX.Element {
       id="Capa_1"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 495.398 495.398"
+      {...props}
     >
       <g id="SVGRepo_bgCarrier"></g>
       <g id="SVGRepo_tracerCarrier"></g>
