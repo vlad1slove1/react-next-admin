@@ -10,7 +10,6 @@ import { deleteOrder } from '@/redux/slices/ordersSlice'
 import { useDisclosure } from '@nextui-org/react'
 
 import SnackbarWithAlert from '@/components/SnackbarWithAlert'
-import NewOrderButton from '@/components/NewOrderButton'
 import EditOrderModal from '@/components/modals/EditOrderModal'
 import Spinner from '@/components/Spinner'
 import Box from '@mui/material/Box'
@@ -18,7 +17,9 @@ import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/DeleteOutlined'
 import { DataGrid } from '@mui/x-data-grid/DataGrid'
 import { GridActionsCellItem } from '@mui/x-data-grid'
+import NewOrderButton from '@/components/NewOrderButton'
 import SignOutButton from '@/components/SignOutButton'
+import GoHomeButton from '@/components/GoHomeButton'
 
 import type { SetStateAction, SyntheticEvent } from 'react'
 import type { GridColDef, GridRowId } from '@mui/x-data-grid'
@@ -168,10 +169,10 @@ export default function Orders () {
       <Box>
         <Box sx={{
           backgroundColor: 'rgba(237, 231, 225)',
-          display: 'flex',
-          justifyContent: 'space-evenly'
+          display: 'flex'
         }}>
           <NewOrderButton />
+          <GoHomeButton style={{ marginLeft: 'auto' }} />
           <SignOutButton />
         </Box>
 
