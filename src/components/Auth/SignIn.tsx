@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 
-import { Input, Button } from '@nextui-org/react'
+import { Input, Button, Link } from '@nextui-org/react'
 import Image from 'next/image'
 import MailIcon from '@/components/icons/MailIcon'
 import EyeFilledIcon from '@/components/icons/EyeFilledIcon'
@@ -81,8 +81,8 @@ export default function LoginPage (): React.JSX.Element {
     <>
       <div className="z-0">
         <Image
-          alt="Background image"
           src={loginPageBackground}
+          alt="Sign-in page background"
           placeholder="blur"
           quality={100}
           fill
@@ -95,7 +95,9 @@ export default function LoginPage (): React.JSX.Element {
 
       <div className="flex justify-center items-center h-screen text-black">
         <form className="flex flex-col gap-2 border-2 shadow-sm bg-blue-50 px-4 pt-2 pb-4 mb-2 w-96 z-10">
-          <h2 className="pt-2 pb-2 text-center font-bold font-sans text-gray-600">Log in to enter /admin page</h2>
+          <h2 className="pt-2 pb-2 text-center font-bold font-sans text-gray-600">Login to admin panel or link&nbsp;
+            <Link href={'/'}>home</Link>
+          </h2>
           <Input
             autoFocus={true}
             value={email}
@@ -108,7 +110,7 @@ export default function LoginPage (): React.JSX.Element {
             isInvalid={!!errors.email}
             color={errors.email ? 'danger' : 'success'}
             errorMessage={errors.email?.message}
-            startContent={
+            endContent={
               <MailIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
             }
             className="py-3 font-mono"
