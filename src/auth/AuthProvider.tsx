@@ -5,6 +5,7 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useRouter } from 'next/navigation'
 
 import type { ReactNode } from 'react'
+import type { Session } from '@supabase/auth-helpers-nextjs'
 
 interface IAuthProviderProps {
   accessToken: string | null
@@ -21,7 +22,7 @@ export default function AuthProvider ({
   useEffect(() => {
     const {
       data: { subscription: authListener }
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange((_event, session: Session | null): void => {
       if (session?.access_token !== accessToken) router.refresh()
     })
 

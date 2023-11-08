@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import type { Database } from '@/types/database.types'
 
-export async function GET (request: NextRequest) {
+export async function GET (request: NextRequest): Promise<NextResponse<any>> {
   const requestUrl: URL = new URL(request.url)
   const code: string | null = requestUrl.searchParams.get('code')
 

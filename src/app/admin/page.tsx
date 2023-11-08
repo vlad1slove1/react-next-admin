@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation'
 
 import Orders from '@/components/Orders'
 
-export default async function AdminPage () {
+export default async function AdminPage (): Promise<React.JSX.Element> {
   const supabase = createServerComponentClient({ cookies })
   const { data: { user } } = await supabase.auth.getUser()
 

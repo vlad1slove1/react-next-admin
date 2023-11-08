@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation'
 
 import SignIn from '@/components/Auth/SignIn'
 
-export default async function SignInPage () {
+export default async function SignInPage (): Promise<React.JSX.Element> {
   const supabase = createServerComponentClient({ cookies })
   const { data } = await supabase.auth.getSession()
 
