@@ -1,4 +1,4 @@
-## Application in development
+## Credentials
 
 ```bash
 admin-user at /sign-in page
